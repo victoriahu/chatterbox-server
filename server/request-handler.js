@@ -28,31 +28,69 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
+  if (request.url === '/classes/messages') {
+      // The outgoing status.
+    // const {headers, method, url} = request;
+    console.log('my cool url lol', request.url);
+    var statusCode = 200;
+    
+    // See the note below about CORS headers.
+    
+    // var headers = defaultCorsHeaders;
 
-  // The outgoing status.
-  var statusCode = 200;
+    // Tell the client we are sending them plain text.
+    //
+    // You will need to change this if you are sending something
+    // other than plain text, like JSON or HTML.
+    var headers = {};
+    headers['Content-Type'] = 'application/json';
 
-  // See the note below about CORS headers.
-  var headers = defaultCorsHeaders;
+    // .writeHead() writes to the request line and headers of the response,
+    // which includes the status and all headers.
+    response.writeHead(statusCode, headers);
+    
+    var body = {
+      hello: 'hello',
+      results: []
+    }
+    response.write(JSON.stringify(body));
+    response.end()
+    // let results = [];
+    // request.on('error', (err) => {
+    // // This prints the error message and stack trace to `stderr`.
+    // //err.stack
+    // console.error(err.stack);
+    // }).on('data', (chunk) => {
+    //   results.push(chunk);
+    // }).on('end',() => {
+    //   results = Buffer.concat(results).toString();
+      
+      
+    //   // response.on('error', (err) => {
+    //   //   console.error(err);
+    //   // });
+      
+    //   response.statusCode = 200;
+    //   response.setHeader('Content-Type', 'text/plain');
+      
+    //   const responseBody = {headers, method, url, results};
+    //   response.write(JSON.stringify(responseBody));
+    //   response.end();
+    // });
+      
+    }
 
-  // Tell the client we are sending them plain text.
-  //
-  // You will need to change this if you are sending something
-  // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+    
+    
 
-  // .writeHead() writes to the request line and headers of the response,
-  // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
-
-  // Make sure to always call response.end() - Node may not send
-  // anything back to the client until you do. The string you pass to
-  // response.end() will be the body of the response - i.e. what shows
-  // up in the browser.
-  //
-  // Calling .end "flushes" the response's internal buffer, forcing
-  // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+    // Make sure to always call response.end() - Node may not send
+    // anything back to the client until you do. The string you pass to
+    // response.end() will be the body of the response - i.e. what shows
+    // up in the browser.
+    //
+    // Calling .end "flushes" the response's internal buffer, forcing
+    // node to actually send all the data over to the client.
+    // response.end('Hello, World!');
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -71,3 +109,4 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+exports.requestHandler = requestHandler;
