@@ -88,7 +88,7 @@ describe('Node Server Request Listener Function', function() {
     expect(res._responseCode).to.equal(200);
     var messages = JSON.parse(res._data).results;
     expect(messages.length).to.be.above(0);
-    console.log("spec messages: ", messages);
+    
     expect(messages[0].username).to.equal('Jono');
     expect(messages[0].text).to.equal('Do my bidding!');
     expect(res._ended).to.equal(true);
@@ -103,5 +103,39 @@ describe('Node Server Request Listener Function', function() {
     expect(res._responseCode).to.equal(404);
     expect(res._ended).to.equal(true);
   });
+  
+  it ('Should respond with the correct room number of a message that is posted', function() {
+    var stubMsg = {
+      username: 'Vicky',
+      text: 'I need caffeine',
+      room: 'hack-reactor-sf'
+    }
+    
+    var req = new stubs.request('/classes/messages', 'POST', stubMsg);
+    var res = new stubs.response();
+
+    handler.requestHandler(req, res);
+
+    expect(res._responseCode).to.equal(201);
+    
+    ////////////////GET NEXT/////////
+    
+    req = new stubs.request('/classes/messages', 'GET');
+    res = new stubs.response();
+  
+
+    handler.requestHandler(req, res);
+    
+    expect(res._responseCode).to.equal(200);
+    var messages = JSON.parse(res._data).results;
+    expect(messages.length).to.be.above(0);
+    expect(messages[2].room).to.equal('hack-reactor-sf');
+    expect(res._ended).to.equal(true);
+  })
 
 });
+
+
+
+
+

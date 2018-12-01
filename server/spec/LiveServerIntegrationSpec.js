@@ -60,8 +60,6 @@ describe('server', function() {
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
         var messages = JSON.parse(body).results;
         
-        console.log(JSON.parse(body).results);
-        
         expect(messages[0].username).to.equal('Jono');
         expect(messages[0].text).to.equal('Do my bidding!');
         done();
@@ -70,11 +68,38 @@ describe('server', function() {
   });
 
   it('Should 404 when asked for a nonexistent endpoint', function(done) {
+
+    
     request('http://127.0.0.1:3000/arglebargle', function(error, response, body) {
       expect(response.statusCode).to.equal(404);
       done();
+      
+      
     });
   });
 
+  it('Should respond with the correct room number of a message that is posted', function(done) {
+    
+    var requestParams = {method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Vicky',
+        text: 'I need caffeine',
+        room: 'hack-reactor-sf'}
+    };
+
+    request(requestParams, function(error, response, body) {
+      request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+        var messages = JSON.parse(body).results;
+          
+          console.log(JSON.parse(body).results);
+          
+          expect(messages[2].room).to.equal('hack-reactor-sf');
+          done();
+        
+        
+      });
+    });
+  });
 
 });
