@@ -101,5 +101,12 @@ describe('server', function() {
       });
     });
   });
+    
+  it('should respond to GET requests for /weAreAwesome with a 200 status code', function(done) {
+    request('http://127.0.0.1:3000/weAreAwesome', function(error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      done();
+      });
+    });
 
 });

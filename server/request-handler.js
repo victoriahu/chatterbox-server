@@ -36,7 +36,7 @@ var requestHandler = function(request, response) {
 
   // console.log('Serving request type ' + request.method + ' for url ' + request.url);
   
-  if (request.url === '/classes/messages' && request.method === 'GET') {
+  if ((request.url === '/classes/messages' || request.url === '/weAreAwesome') && request.method === 'GET') {
     // console.log('my cool url lol', request.url);
     
     var statusCode = 200;
@@ -49,7 +49,7 @@ var requestHandler = function(request, response) {
 
       
   }
-  if (request.url !== '/classes/messages' && request.method === 'GET') {
+  if (request.url !== '/classes/messages' && request.url !== '/weAreAwesome' && request.method === 'GET') {
     var statusCode = 404;
     var headers = {};
     headers['Content-Type'] = 'application/json';

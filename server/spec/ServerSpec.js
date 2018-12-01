@@ -132,6 +132,44 @@ describe('Node Server Request Listener Function', function() {
     expect(messages[2].room).to.equal('hack-reactor-sf');
     expect(res._ended).to.equal(true);
   })
+  
+  it('Should answer GET requests for /weAreAwesome with a 200 status code', function() {
+    // This is a fake server request. Normally, the server would provide this,
+    // but we want to test our function's behavior totally independent of the server code
+    var req = new stubs.request('/weAreAwesome', 'GET');
+    var res = new stubs.response();
+
+    handler.requestHandler(req, res);
+
+    expect(res._responseCode).to.equal(200);
+    expect(res._ended).to.equal(true);
+  });
+  
+  it('Should respond with only objects within the results array', function() {
+      var stubMsg = {
+      username: 'Vicky',
+      text: 'I need caffeine',
+      room: 'hack-reactor-sf'
+    }  
+  
+    var req = new stubs.request('/classes/messages', 'GET');
+    var res = new stubs.response();
+  
+
+    handler.requestHandler(req, res);
+    
+    expect(res._responseCode).to.equal(200);
+    var messages = JSON.parse(res._data).results;
+    expect(messages.length).to.be.above(0);
+    
+    for (var i = 0; i < messages.length; i++) {
+      expect(typeof messages[i]).to.equal('object');
+    }
+    
+    // expect(typeof messages[1]).to.equal('object');
+    expect(res._ended).to.equal(true);
+    
+  })
 
 });
 
