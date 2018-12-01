@@ -11,7 +11,11 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var body = {
+  hello: 'hello',
+  results: [],
+}
+    
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -23,62 +27,60 @@ var requestHandler = function(request, response) {
   // http://nodejs.org/documentation/api/
 
   // Do some basic logging.
+
   //
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  if (request.url === '/classes/messages') {
-      // The outgoing status.
-    // const {headers, method, url} = request;
-    console.log('my cool url lol', request.url);
-    var statusCode = 200;
+  var headers = defaultCorsHeaders;
+
+  // console.log('Serving request type ' + request.method + ' for url ' + request.url);
+  
+  if (request.url === '/classes/messages' && request.method === 'GET') {
+    // console.log('my cool url lol', request.url);
     
+    var statusCode = 200;
+    var headers = {};
+    headers['Content-Type'] = 'application/json';
+    response.writeHead(statusCode, headers);
+    //parsing it?? do we need to stringify it?
+    // response.write(JSON.stringify(body));
+    response.end(JSON.stringify(body))
+
+      
+  }
+  if (request.url === '/classes/messages' && request.method === 'POST') {
+    // console.log('my cool url lol', request.url);
+    // console.log('request data', body);
+    var statusCode = 201;
+    // var headers = {};
+    headers['Content-Type'] = 'application/json';
+    response.writeHead(statusCode, headers);
+
+    request.on('data', function(data) {
+    body.results.push(JSON.parse(data));
+    // console.log('this is our body with new data', body)
+    // body['myData'] = data;
+    });
+    request.on('end', function () {
+    // console.log('POSTed: ', body);
+        
+    // response.write(JSON.stringify(body));
+    response.end(JSON.stringify(body))
+    })
     // See the note below about CORS headers.
     
-    // var headers = defaultCorsHeaders;
 
     // Tell the client we are sending them plain text.
     //
     // You will need to change this if you are sending something
     // other than plain text, like JSON or HTML.
-    var headers = {};
-    headers['Content-Type'] = 'application/json';
+    
 
     // .writeHead() writes to the request line and headers of the response,
     // which includes the status and all headers.
-    response.writeHead(statusCode, headers);
-    
-    var body = {
-      hello: 'hello',
-      results: []
-    }
-    response.write(JSON.stringify(body));
-    response.end()
-    // let results = [];
-    // request.on('error', (err) => {
-    // // This prints the error message and stack trace to `stderr`.
-    // //err.stack
-    // console.error(err.stack);
-    // }).on('data', (chunk) => {
-    //   results.push(chunk);
-    // }).on('end',() => {
-    //   results = Buffer.concat(results).toString();
-      
-      
-    //   // response.on('error', (err) => {
-    //   //   console.error(err);
-    //   // });
-      
-    //   response.statusCode = 200;
-    //   response.setHeader('Content-Type', 'text/plain');
-      
-    //   const responseBody = {headers, method, url, results};
-    //   response.write(JSON.stringify(responseBody));
-    //   response.end();
-    // });
-      
-    }
+
+  }
 
     
     
