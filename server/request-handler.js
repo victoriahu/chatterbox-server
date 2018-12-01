@@ -49,6 +49,15 @@ var requestHandler = function(request, response) {
 
       
   }
+  if (request.url !== '/classes/messages' && request.method === 'GET') {
+    var statusCode = 404;
+    var headers = {};
+    headers['Content-Type'] = 'application/json';
+    response.writeHead(statusCode, headers);
+    //parsing it?? do we need to stringify it?
+    // response.write(JSON.stringify(body));
+    response.end(JSON.stringify(body))
+  }
   if (request.url === '/classes/messages' && request.method === 'POST') {
     // console.log('my cool url lol', request.url);
     // console.log('request data', body);
